@@ -14,10 +14,20 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <bukkit.version>1.13.1-R0.1-SNAPSHOT</bukkit.version>
-        <citizensapi.version>2.0.24-SNAPSHOT</citizensapi.version>
+        <citizensapi.version>2.0.35-SNAPSHOT</citizensapi.version>
         <vault.version>1.5.6</vault.version>
         <hyperconomy.version>0.975.7-SNAPSHOT</hyperconomy.version>
         <build.number>Unknown</build.number>
+        
+        <!--
+            Change the Java version this plugin is built on.
+
+            IMPORTANT: For Java 8, version is "1.8", for Java 11+ it is only "11" or "17".
+
+            If you use 1.8 then your plugin will work on newer versions, but if you
+            use 17 then it will NOT load on servers with previous Java versions.
+        -->
+        <java.version>21</java.version>
     </properties>
 
     <!-- Repositories -->
@@ -27,9 +37,10 @@
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
 		<repository>
-			<id>citizens-repo</id>
-			<url>http://repo.citizensnpcs.co/</url>
-		</repository>
+            <id>citizens-repo</id>
+            <name>Citizens Repository</name>
+            <url>https://maven.citizensnpcs.co/repo</url>
+        </repository>
 		<repository>
 			<id>vault-repo</id>
 			<url>http://nexus.hc.to/content/repositories/pub_releases</url>
@@ -38,14 +49,20 @@
 
     <!-- Dependencies -->
     <dependencies>
-    	<dependency>
-			<groupId>net.citizensnpcs</groupId>
-			<artifactId>citizens</artifactId>
-			<version>${citizensapi.version}</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-    	<dependency>
+        <dependency>
+            <groupId>net.citizensnpcs</groupId>
+            <artifactId>citizens-main</artifactId>
+            <version>${citizensapi.version}</version>
+            <type>jar</type>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
 			<version>${bukkit.version}</version>
@@ -82,10 +99,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+
+                <!-- Change version to the latest one from
+                    https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
+                <version>3.13.0</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
         </plugins>
